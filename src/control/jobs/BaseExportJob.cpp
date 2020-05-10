@@ -41,6 +41,10 @@ auto BaseExportJob::getFilterName() -> string {
     return gtk_file_filter_get_name(filter);
 }
 
+void BaseExportJob::setFilename(Path name) {
+    filename = name;
+}
+
 auto BaseExportJob::showFilechooser() -> bool {
     initDialog();
     addFilterToDialog();

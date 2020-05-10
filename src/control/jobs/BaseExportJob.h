@@ -33,6 +33,7 @@ public:
 public:
     virtual bool showFilechooser();
     string getFilterName();
+    virtual void setFilename(Path name);
 
 protected:
     void initDialog();

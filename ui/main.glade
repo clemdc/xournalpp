@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkAdjustment" id="adjHorizontal">
@@ -128,7 +128,7 @@
     <property name="name">mainWindow</property>
     <property name="can_focus">False</property>
     <property name="icon">pixmaps/com.github.xournalpp.xournalpp.svg</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child>
@@ -222,8 +222,8 @@
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
                             <signal name="activate" handler="ACTION_SAVE_AS" swapped="no"/>
-                            <accelerator key="u" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                             <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+                            <accelerator key="u" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                           </object>
                         </child>
                         <child>
@@ -905,8 +905,8 @@
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
                             <signal name="activate" handler="ACTION_ZOOM_IN" swapped="no"/>
-                            <accelerator key="KP_Add" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                             <accelerator key="plus" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                            <accelerator key="KP_Add" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                           </object>
                         </child>
                         <child>
@@ -918,8 +918,8 @@
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
                             <signal name="activate" handler="ACTION_ZOOM_OUT" swapped="no"/>
-                            <accelerator key="KP_Subtract" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                             <accelerator key="minus" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                            <accelerator key="KP_Subtract" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                           </object>
                         </child>
                         <child>
@@ -2017,6 +2017,80 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkBox" id="panelCorrection">
+                    <property name="name">panelCorrection</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkButton" id="btCorrectionOpenList">
+                        <property name="label" translatable="yes">Open PDF List</property>
+                        <property name="name">btCorrectionOpenList</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">4</property>
+                        <property name="margin_right">4</property>
+                        <property name="margin_top">4</property>
+                        <property name="margin_bottom">4</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkListBox" id="listCorrection">
+                            <property name="name">listCorrection</property>
+                            <property name="width_request">200</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btCorrectionGenerate">
+                        <property name="label" translatable="yes">Generate ALL Final PDFs</property>
+                        <property name="name">btCorrectionGenerate</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">4</property>
+                        <property name="margin_right">4</property>
+                        <property name="margin_top">4</property>
+                        <property name="margin_bottom">4</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkPaned" id="panelMainContents">
                     <property name="name">panelMainContents</property>
                     <property name="visible">True</property>
@@ -2217,7 +2291,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -2231,7 +2305,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -2245,7 +2319,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
               </object>

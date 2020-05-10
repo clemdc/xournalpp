@@ -296,6 +296,7 @@ void Control::initWindow(MainWindow* win) {
     toolHandler->eraserTypeChanged();
 
     this->searchBar = new SearchBar(this);
+    this->correction = new Correction(this);
 
     // Disable undo buttons
     undoRedoChanged();

@@ -17,6 +17,7 @@
 #include "../gui/dialog/LatexDialog.h"
 #include "gui/MainWindow.h"
 #include "gui/SearchBar.h"
+#include "gui/Correction.h"
 #include "gui/sidebar/Sidebar.h"
 #include "jobs/ProgressListener.h"
 #include "jobs/XournalScheduler.h"
@@ -337,6 +338,7 @@ private:
 
     Sidebar* sidebar = nullptr;
     SearchBar* searchBar = nullptr;
+    Correction* correction = nullptr;
 
     ToolHandler* toolHandler;
 
