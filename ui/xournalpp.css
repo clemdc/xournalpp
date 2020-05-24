@@ -71,3 +71,8 @@ GtkToolbar GtkButton
 	padding: 2
 }
 */
+
+.correction-current {
+    background: blue;
+    color: white;
+}

@@ -674,6 +674,7 @@ void MainWindow::setAudioPlaybackPaused(bool paused) { this->getToolMenuHandler(
 
 void MainWindow::loadMainCSS(GladeSearchpath* gladeSearchPath, const gchar* cssFilename) {
     string filename = gladeSearchPath->findFile("", cssFilename);
+    printf("CSS: %s\n", filename.c_str());
     GtkCssProvider* provider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(provider, filename.c_str(), nullptr);
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider),

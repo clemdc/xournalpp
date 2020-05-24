@@ -1,136 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.36.0 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <object class="GtkAdjustment" id="adjHorizontal">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjVertical">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkRevealer" id="floatingToolbox">
-    <property name="name">floatingToolbox</property>
+  <object class="GtkImage" id="add">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="transition_type">crossfade</property>
-    <property name="reveal_child">True</property>
-    <child>
-      <object class="GtkBox" id="floatingvbox">
-        <property name="name">floatingvbox</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel" id="labelFloatingToolbox">
-            <property name="name">labelFloatingToolbox</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes"> = Floating Toolbox (experimental) =</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-              <attribute name="foreground" value="#eeeeeeeeecec"/>
-              <attribute name="background" value="#2e2e34343636"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="tbFloat1">
-            <property name="name">tbFloat1</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <style>
-              <class name="tbCss"/>
-            </style>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="tbFloat2">
-            <property name="name">tbFloat2</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <style>
-              <class name="tbCss"/>
-            </style>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="tbFloat3">
-            <property name="name">tbFloat3</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <style>
-              <class name="tbCss"/>
-            </style>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="tbFloat4">
-            <property name="name">tbFloat4</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <style>
-              <class name="tbCss"/>
-            </style>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="showIfEmpty">
-            <property name="name">showIfEmpty</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_bottom">30</property>
-            <property name="label" translatable="yes">&lt;b&gt;Empty Toolbox&lt;/b&gt;
-&lt;i&gt;Menu: View/Toolbars&lt;/i&gt;</property>
-            <property name="use_markup">True</property>
-            <property name="justify">center</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
-        </child>
-        <style>
-          <class name="tbCss"/>
-        </style>
-      </object>
-    </child>
+    <property name="stock">gtk-add</property>
   </object>
   <object class="GtkWindow" id="mainWindow">
     <property name="name">mainWindow</property>
     <property name="can_focus">False</property>
     <property name="icon">pixmaps/com.github.xournalpp.xournalpp.svg</property>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkOverlay" id="mainOverlay">
         <property name="name">mainOverlay</property>
@@ -2024,7 +1904,7 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkButton" id="btCorrectionOpenList">
-                        <property name="label" translatable="yes">Open PDF List</property>
+                        <property name="label">Add PDF</property>
                         <property name="name">btCorrectionOpenList</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2033,6 +1913,8 @@
                         <property name="margin_right">4</property>
                         <property name="margin_top">4</property>
                         <property name="margin_bottom">4</property>
+                        <property name="image">add</property>
+                        <property name="always_show_image">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2067,7 +1949,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="btCorrectionGenerate">
-                        <property name="label" translatable="yes">Generate ALL Final PDFs</property>
+                        <property name="label" translatable="yes">Export Annotated PDFs</property>
                         <property name="name">btCorrectionGenerate</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2583,6 +2465,167 @@
             <property name="index">-1</property>
           </packing>
         </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+  </object>
+  <object class="GtkAdjustment" id="adjHorizontal">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjVertical">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkImage" id="delete">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-delete</property>
+  </object>
+  <object class="GtkBox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkButton">
+        <property name="label" translatable="yes">example.pdf</property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="image">delete</property>
+        <property name="always_show_image">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkRevealer" id="floatingToolbox">
+    <property name="name">floatingToolbox</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="transition_type">crossfade</property>
+    <property name="reveal_child">True</property>
+    <child>
+      <object class="GtkBox" id="floatingvbox">
+        <property name="name">floatingvbox</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="labelFloatingToolbox">
+            <property name="name">labelFloatingToolbox</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes"> = Floating Toolbox (experimental) =</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+              <attribute name="foreground" value="#eeeeeeeeecec"/>
+              <attribute name="background" value="#2e2e34343636"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="tbFloat1">
+            <property name="name">tbFloat1</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <style>
+              <class name="tbCss"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="tbFloat2">
+            <property name="name">tbFloat2</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <style>
+              <class name="tbCss"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="tbFloat3">
+            <property name="name">tbFloat3</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <style>
+              <class name="tbCss"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="tbFloat4">
+            <property name="name">tbFloat4</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <style>
+              <class name="tbCss"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="showIfEmpty">
+            <property name="name">showIfEmpty</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_bottom">30</property>
+            <property name="label" translatable="yes">&lt;b&gt;Empty Toolbox&lt;/b&gt;
+&lt;i&gt;Menu: View/Toolbars&lt;/i&gt;</property>
+            <property name="use_markup">True</property>
+            <property name="justify">center</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <style>
+          <class name="tbCss"/>
+        </style>
       </object>
     </child>
   </object>

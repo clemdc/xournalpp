@@ -385,6 +385,8 @@ void XournalView::scrollTo(size_t pageNo, double yDocument) {
         return;
     }
 
+    printf("XournalView::scrollTo: pageNo=%d, yDocument=%f\n", pageNo, yDocument);
+
     XojPageView* v = this->viewPages[pageNo];
 
     // Make sure it is visible
@@ -404,6 +406,8 @@ void XournalView::scrollTo(size_t pageNo, double yDocument) {
 
 void XournalView::pageRelativeXY(int offCol, int offRow) {
     size_t currPage = getCurrentPage();
+
+    printf("XournalView::pageRelativeXY: offCol=%d, offRow=%d\n", offCol, offRow);
 
     XojPageView* view = getViewFor(currPage);
     int row = view->getMappedRow();

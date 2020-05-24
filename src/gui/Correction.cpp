@@ -6,49 +6,13 @@
 
 #include "control/Control.h"
 #include "gui/XournalView.h"
+#include "gui/scroll/ScrollHandling.h"
 
 #include "control/jobs/PdfExportJob.h"
 
 #include "i18n.h"
 
-static gboolean YourCallBack(void* data)
-{
-    Correction *corr = (Correction *)data; 
-    corr->control->getZoomControl()->zoom100();
-    return FALSE;
-}
-
-#if 0
-void Correction::onItemClicked(GtkWidget *widget)
-{
-    const gchar *filename = gtk_button_get_label(GTK_BUTTON(widget));
-    printf("Clicked: %s\n", filename);
-
-    // TODO: if xopp not found, create it and annotate the pdf
-    //       else xopp found, open it
-    control->clearSelectionEndText();
-    control->newFile();
-    control->annotatePdf(filename, false, false);
-
-
-#if 0
-    printf("START ZOOMING\n");
-    m_window->getXournal()->zoomIn();
-    m_window->getXournal()->zoomOut();
-    printf("DONE ZOOMING\n");
-#endif
-
-    g_timeout_add_seconds(1, YourCallBack, this);
-
-    //m_window->getXournal()->zoomChanged();
-    //control->fireActionSelected(GROUP_ZOOM_FIT, ACTION_ZOOM_100);
-    //control->getZoomControl()->zoom100();
-
-
-    // TODO: unhighlight current
-    //       highlight next
-}
-#endif
+static Paper *cur_paper = NULL;
 
 static void on_paper_clicked(GtkWidget *widget, gpointer data)
 {
@@ -58,7 +22,10 @@ static void on_paper_clicked(GtkWidget *widget, gpointer data)
         /* create xopp */
         paper->corr->control->clearSelectionEndText();
         paper->corr->control->newFile();
-        paper->corr->control->annotatePdf(paper->pdf->c_str(), false, false);
+        bool an = paper->corr->control->annotatePdf(paper->pdf->c_str(), false, false);
+        if (!an) {
+            return;
+        }
         
         /* save xopp */
         std::stringstream ss;
@@ -75,10 +42,47 @@ static void on_paper_clicked(GtkWidget *widget, gpointer data)
         std::stringstream ss;
         ss << "file://" << paper->xopp->c_str();
         Path path = Path::fromUri(ss.str());
-        paper->corr->control->openFile(path, -1, true);
+        bool op = paper->corr->control->openFile(path, -1, true);
+        if (!op) {
+            return;
+        }
     }
 
-    g_timeout_add_seconds(1, YourCallBack, paper->corr);
+    if (cur_paper) {
+        GtkAdjustment *vertical = paper->corr->m_window->getXournal()->getScrollHandling()->getVertical();
+        double value = gtk_adjustment_get_value(vertical);
+        printf("value: %f\n", value);
+    }
+
+    auto itr = std::find(paper->corr->papers.begin(), paper->corr->papers.end(), paper);
+    g_assert(itr != paper->corr->papers.cend());
+    int index = std::distance(paper->corr->papers.begin(), itr);
+    gtk_list_box_select_row(GTK_LIST_BOX(paper->corr->m_list),
+            gtk_list_box_get_row_at_index(GTK_LIST_BOX(paper->corr->m_list), index));
+
+    cur_paper = paper;
+}
+
+static void on_delete_clicked(GtkWidget *widget, gpointer data)
+{
+    Paper *paper = (Paper *)data; 
+
+    if (cur_paper == paper) {
+        paper->corr->control->clearSelectionEndText();
+        paper->corr->control->newFile();
+        cur_paper = NULL;
+    }
+
+    gtk_container_remove(GTK_CONTAINER(paper->corr->m_list), gtk_widget_get_parent(paper->box));
+
+    auto itr = std::find(paper->corr->papers.begin(), paper->corr->papers.end(), paper);
+    g_assert(itr != paper->corr->papers.cend());
+    paper->corr->papers.erase(itr);
+
+    printf("papers:\n");
+    for (auto p : paper->corr->papers) {
+        printf("%s\n", p->xopp->c_str());
+    }
 }
 
 void Correction::onOpenList(void)
@@ -123,10 +127,15 @@ void Correction::onOpenList(void)
             papers.push_back(paper);
 
             /* create new line in side view */
+            paper->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
             GtkWidget *button = gtk_button_new_with_label(paper->pdf->filename().c_str());
             g_signal_connect(button, "clicked", G_CALLBACK(on_paper_clicked), paper);
-            gtk_list_box_insert(GTK_LIST_BOX(m_list), button, -1);
-            gtk_widget_show(button);
+            GtkWidget *del_button = gtk_button_new_from_icon_name("edit-delete", GTK_ICON_SIZE_BUTTON);
+            g_signal_connect(del_button, "clicked", G_CALLBACK(on_delete_clicked), paper);
+            gtk_box_pack_start(GTK_BOX(paper->box), button, TRUE, TRUE, 2);
+            gtk_box_pack_end(GTK_BOX(paper->box), del_button, FALSE, FALSE, 2);
+            gtk_widget_show_all(paper->box);
+            gtk_list_box_insert(GTK_LIST_BOX(m_list), paper->box, -1);
         }
     }
 

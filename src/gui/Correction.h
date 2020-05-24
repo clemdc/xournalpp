@@ -41,4 +41,5 @@ public:
     Correction *corr;
     std::filesystem::path *pdf;
     std::filesystem::path *xopp;
+    GtkWidget *box;
 };
