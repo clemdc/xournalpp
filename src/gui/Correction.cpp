@@ -163,18 +163,13 @@ static gboolean export_next(gpointer data)
 
     corr->control->openFile(paper->xopp, -1, true);
 
-    std::stringstream ss;
-    std::filesystem::path *corrected = new std::filesystem::path(paper->pdf.str());
-    std::string name = corrected->stem().c_str();
-    name = name + "-Corrected.pdf";
-    corrected->replace_filename(name);
-    ss << "file://" << corrected->c_str();
-    printf("corrected: %s\n", ss.str().c_str());
-    Path path = Path::fromUri(ss.str());
+    Path corrected = paper->pdf;
+    corrected.clearExtensions(".pdf");
+    corrected += "-Corrected.pdf";
 
     corr->control->clearSelectionEndText();
     PdfExportJob *job = new PdfExportJob(corr->control);
-    job->setFilename(path);
+    job->setFilename(corrected);
     corr->control->getScheduler()->addJob(job, JOB_PRIORITY_NONE);
 
     job->unref();
@@ -183,7 +178,7 @@ static gboolean export_next(gpointer data)
 
     GtkWidget *vbox = gtk_dialog_get_content_area(GTK_DIALOG(corr->m_dialog));
 
-    GtkWidget *label = gtk_label_new (corrected->c_str());
+    GtkWidget *label = gtk_label_new (corrected.c_str());
     gtk_container_add(GTK_CONTAINER(vbox), label);
     gtk_widget_show(label);
 
