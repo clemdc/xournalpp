@@ -12,37 +12,35 @@
 
 #include "i18n.h"
 
+/* FIXME: remove static variables */
+
 static Paper *cur_paper = NULL;
+
+static GtkWidget *close_button = NULL;
 
 static void on_paper_clicked(GtkWidget *widget, gpointer data)
 {
     Paper *paper = (Paper *)data;
 
-    if (!std::filesystem::exists(*paper->xopp)) {
+    if (!paper->xopp.exists()) {
         /* create xopp */
         paper->corr->control->clearSelectionEndText();
         paper->corr->control->newFile();
-        bool an = paper->corr->control->annotatePdf(paper->pdf->str().c_str(), false, false);
+        bool an = paper->corr->control->annotatePdf(paper->pdf.c_str(), false, false);
         if (!an) {
             return;
         }
 
         /* save xopp */
-        std::stringstream ss;
-        ss << "file://" << paper->xopp->c_str();
-        Path path = Path::fromUri(ss.str());
         Document *doc = paper->corr->control->getDocument();
         doc->lock();
-        doc->setFilename(path);
+        doc->setFilename(paper->xopp);
         doc->unlock();
         paper->corr->control->save(true);
     }
     else {
         /* open existing xopp */
-        std::stringstream ss;
-        ss << "file://" << paper->xopp->c_str();
-        Path path = Path::fromUri(ss.str());
-        bool op = paper->corr->control->openFile(path, -1, true);
+        bool op = paper->corr->control->openFile(paper->xopp, -1, true);
         if (!op) {
             return;
         }
@@ -81,8 +79,13 @@ static void on_delete_clicked(GtkWidget *widget, gpointer data)
 
     printf("papers:\n");
     for (auto p : paper->corr->papers) {
-        printf("%s\n", p->xopp->c_str());
+        printf("%s\n", p->xopp.getFilename().c_str());
     }
+}
+
+static gint compare(gconstpointer a, gconstpointer b)
+{
+    return strcmp((const char *)a, (const char *)b);
 }
 
 void Correction::onOpenList(void)
@@ -112,6 +115,7 @@ void Correction::onOpenList(void)
     if (res == GTK_RESPONSE_ACCEPT) {
         char *filename;
         GSList *filenames = gtk_file_chooser_get_filenames(chooser);
+        filenames = g_slist_sort(filenames, compare);
         for(GSList *f = filenames; f; f = f->next) {
             filename = (char *)f->data;
             printf("file: %s\n", filename);
@@ -120,17 +124,20 @@ void Correction::onOpenList(void)
             paper->corr = this;
             std::stringstream ss;
             ss << "file://" << filename;
-            paper->pdf = new Path(filename);
-            paper->xopp = new std::filesystem::path(filename);
-            paper->xopp->replace_extension(".xopp");
-            if (!std::filesystem::exists(*paper->xopp)) {
+            Path p(filename);
+            paper->pdf = p;
+            paper->xopp = paper->pdf;
+            paper->xopp.clearExtensions(".pdf");
+            paper->xopp += ".xopp";
+            printf("xopp: %s\n", paper->xopp.c_str());
+            if (!paper->xopp.exists()) {
                 printf("xopp not found!\n");
             }
             papers.push_back(paper);
 
             /* create new line in side view */
             paper->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-            GtkWidget *button = gtk_button_new_with_label(paper->pdf->getFilename().c_str());
+            GtkWidget *button = gtk_button_new_with_label(paper->pdf.getFilename().c_str());
             g_signal_connect(button, "clicked", G_CALLBACK(on_paper_clicked), paper);
             GtkWidget *del_button = gtk_button_new_from_icon_name("edit-delete", GTK_ICON_SIZE_BUTTON);
             g_signal_connect(del_button, "clicked", G_CALLBACK(on_delete_clicked), paper);
@@ -144,24 +151,20 @@ void Correction::onOpenList(void)
     gtk_widget_destroy(dialog);
 }
 
-GtkWidget *close_button = NULL;
-
 static gboolean export_next(gpointer data)
 {
     Correction *corr = (Correction *)data;
+
+    g_assert(corr->export_index < corr->papers.size());
+
     Paper *paper = corr->papers[corr->export_index];
 
-    printf("paper: %s\n", paper->pdf->str().c_str());
+    printf("paper: %s\n", paper->pdf.c_str());
 
-    {
-        std::stringstream ss;
-        ss << "file://" << paper->xopp->c_str();
-        Path path = Path::fromUri(ss.str());
-        corr->control->openFile(path, -1, true);
-    }
+    corr->control->openFile(paper->xopp, -1, true);
 
     std::stringstream ss;
-    std::filesystem::path *corrected = new std::filesystem::path(paper->pdf->str());
+    std::filesystem::path *corrected = new std::filesystem::path(paper->pdf.str());
     std::string name = corrected->stem().c_str();
     name = name + "-Corrected.pdf";
     corrected->replace_filename(name);
@@ -201,6 +204,11 @@ static gboolean export_next(gpointer data)
 
 void Correction::onGenerate(void)
 {
+    if(papers.size() == 0) {
+        /* TODO: show error dialog */
+        return;
+    }
+
     // FIXME: temporarily close sidebar (sidebar repaint causes SIGSEGV)
     m_window->setSidebarVisible(false);
 

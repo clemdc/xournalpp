@@ -40,7 +40,7 @@ public:
 class Paper {
 public:
     Correction *corr;
-    Path *pdf;
-    std::filesystem::path *xopp;
+    Path pdf;
+    Path xopp;
     GtkWidget *box;
 };
