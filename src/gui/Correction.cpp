@@ -16,17 +16,17 @@ static Paper *cur_paper = NULL;
 
 static void on_paper_clicked(GtkWidget *widget, gpointer data)
 {
-    Paper *paper = (Paper *)data; 
+    Paper *paper = (Paper *)data;
 
     if (!std::filesystem::exists(*paper->xopp)) {
         /* create xopp */
         paper->corr->control->clearSelectionEndText();
         paper->corr->control->newFile();
-        bool an = paper->corr->control->annotatePdf(paper->pdf->c_str(), false, false);
+        bool an = paper->corr->control->annotatePdf(paper->pdf->str().c_str(), false, false);
         if (!an) {
             return;
         }
-        
+
         /* save xopp */
         std::stringstream ss;
         ss << "file://" << paper->xopp->c_str();
@@ -65,7 +65,7 @@ static void on_paper_clicked(GtkWidget *widget, gpointer data)
 
 static void on_delete_clicked(GtkWidget *widget, gpointer data)
 {
-    Paper *paper = (Paper *)data; 
+    Paper *paper = (Paper *)data;
 
     if (cur_paper == paper) {
         paper->corr->control->clearSelectionEndText();
@@ -118,7 +118,9 @@ void Correction::onOpenList(void)
 
             Paper *paper = new Paper;
             paper->corr = this;
-            paper->pdf = new std::filesystem::path(filename);
+            std::stringstream ss;
+            ss << "file://" << filename;
+            paper->pdf = new Path(filename);
             paper->xopp = new std::filesystem::path(filename);
             paper->xopp->replace_extension(".xopp");
             if (!std::filesystem::exists(*paper->xopp)) {
@@ -128,7 +130,7 @@ void Correction::onOpenList(void)
 
             /* create new line in side view */
             paper->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-            GtkWidget *button = gtk_button_new_with_label(paper->pdf->filename().c_str());
+            GtkWidget *button = gtk_button_new_with_label(paper->pdf->getFilename().c_str());
             g_signal_connect(button, "clicked", G_CALLBACK(on_paper_clicked), paper);
             GtkWidget *del_button = gtk_button_new_from_icon_name("edit-delete", GTK_ICON_SIZE_BUTTON);
             g_signal_connect(del_button, "clicked", G_CALLBACK(on_delete_clicked), paper);
@@ -149,7 +151,7 @@ static gboolean export_next(gpointer data)
     Correction *corr = (Correction *)data;
     Paper *paper = corr->papers[corr->export_index];
 
-    printf("paper: %s\n", paper->pdf->c_str());
+    printf("paper: %s\n", paper->pdf->str().c_str());
 
     {
         std::stringstream ss;
@@ -159,11 +161,12 @@ static gboolean export_next(gpointer data)
     }
 
     std::stringstream ss;
-    std::filesystem::path *corrected = new std::filesystem::path(*paper->pdf);
+    std::filesystem::path *corrected = new std::filesystem::path(paper->pdf->str());
     std::string name = corrected->stem().c_str();
     name = name + "-Corrected.pdf";
     corrected->replace_filename(name);
     ss << "file://" << corrected->c_str();
+    printf("corrected: %s\n", ss.str().c_str());
     Path path = Path::fromUri(ss.str());
 
     corr->control->clearSelectionEndText();
@@ -182,7 +185,7 @@ static gboolean export_next(gpointer data)
     gtk_widget_show(label);
 
     if (corr->export_index >= corr->papers.size()) {
-        gtk_container_remove(GTK_CONTAINER(vbox), corr->m_spinner);        
+        gtk_container_remove(GTK_CONTAINER(vbox), corr->m_spinner);
 
         GtkWidget *label = gtk_label_new ("Done!");
         gtk_container_add(GTK_CONTAINER(vbox), label);
@@ -198,7 +201,8 @@ static gboolean export_next(gpointer data)
 
 void Correction::onGenerate(void)
 {
-    printf("Ma Chérie <3\n");
+    // FIXME: temporarily close sidebar (sidebar repaint causes SIGSEGV)
+    m_window->setSidebarVisible(false);
 
     m_dialog = gtk_dialog_new_with_buttons ("Message",
             control->getGtkWindow(),
@@ -224,8 +228,6 @@ void Correction::onGenerate(void)
     gtk_widget_set_sensitive(close_button, FALSE);
 
     gtk_widget_show_all(m_dialog);
-
-    printf("DONE\n");
 
     export_index = 0;
     g_idle_add(export_next, this);

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include "util/Path.h"
 
 #include <gtk/gtk.h>
 
@@ -39,7 +40,7 @@ public:
 class Paper {
 public:
     Correction *corr;
-    std::filesystem::path *pdf;
+    Path *pdf;
     std::filesystem::path *xopp;
     GtkWidget *box;
 };
