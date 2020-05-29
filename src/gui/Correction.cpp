@@ -233,7 +233,8 @@ void Correction::onGenerate(void)
     gtk_widget_show_all(m_dialog);
 
     export_index = 0;
-    g_idle_add(export_next, this);
+    //g_idle_add(export_next, this);
+    g_timeout_add(500, export_next, this);
 }
 
 Correction::Correction(Control* control) : control(control)
