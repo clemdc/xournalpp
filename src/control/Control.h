@@ -70,7 +70,7 @@ public:
 
 public:
     // Menu File
-    bool newFile(string pageTemplate = "");
+    bool newFile(string pageTemplate = "", Path fileName = "");
     bool openFile(Path filename = "", int scrollToPage = -1, bool forceOpen = false);
     bool annotatePdf(Path filename, bool attachPdf, bool attachToDocument);
     void print();

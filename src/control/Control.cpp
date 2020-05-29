@@ -1897,7 +1897,7 @@ void Control::showSettings() {
     delete dlg;
 }
 
-auto Control::newFile(string pageTemplate) -> bool {
+auto Control::newFile(string pageTemplate, Path fileName) -> bool {
     if (!this->close(true)) {
         return false;
     }
@@ -1906,6 +1906,9 @@ auto Control::newFile(string pageTemplate) -> bool {
 
     this->doc->lock();
     *doc = newDoc;
+    if (!fileName.isEmpty()) {
+        this->doc->setFilename(fileName);
+    };
     this->doc->unlock();
 
     addDefaultPage(std::move(pageTemplate));
